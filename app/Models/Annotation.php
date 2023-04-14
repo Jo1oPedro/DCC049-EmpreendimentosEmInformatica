@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Period extends Model
+class Annotation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'ano',
-        'digito',
-        'user_id'
+        'anotacao',
+        'subject_id'
     ];
 }

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('periods', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->integer('ano');
             $table->tinyInteger('digito');
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
