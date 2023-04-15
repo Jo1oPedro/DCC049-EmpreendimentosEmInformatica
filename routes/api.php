@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::post('login', [LoginController::class, 'login']);
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('anotacoes', AnnotationController::class);
     Route::resource('exames', ExamController::class);
@@ -34,8 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('tarefas', TaskController::class);
     Route::resource('tipos', TypeController::class);
     Route::resource('usuarios', UserController::class);
+    Route::post('logout', [LoginController::class, 'logout']);
 });
 
-Route::post('login', [LoginController::class, 'login']);
 
 
