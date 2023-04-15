@@ -18,8 +18,8 @@ class ExamFactory extends Factory
     public function definition(): array
     {
         return [
-            'data_prova' => fake()->dateTime(),
-            'prova' => 'a',
+            'data_prova' => fake()->dateTime()->format('Y-m-d H:i:s'),
+            'prova' => 'aaa.jpg',
             'nota' => fake()->numberBetween(0, 10),
             'subject_id' => Subject::inRandomOrder()->first()->id
         ];

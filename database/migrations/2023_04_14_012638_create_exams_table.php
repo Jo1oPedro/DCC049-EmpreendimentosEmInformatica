@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->dateTime('data_prova');
-            $table->string('prova');
+            $table->string('prova')->nullable();
             $table->float('nota')->nullable();
             $table->foreignId('subject_id')->constrained()->onDelete('cascade');
             $table->timestamps();

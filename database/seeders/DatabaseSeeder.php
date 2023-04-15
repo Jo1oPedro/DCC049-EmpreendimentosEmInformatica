@@ -27,20 +27,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        User::factory(10)->create();
-        var_dump('dale');
-        Period::factory(10)->create();
-        var_dump('dale');
-        Subject::factory(10)->create();
-        var_dump('dale');
-        Exam::factory(10)->create();
-        var_dump('dale');
-        Annotation::factory(10)->create();
-        var_dump('dale');
-        Type::factory(10)->create();
-        var_dump('dale');
-        Task::factory(10)->create();
-        var_dump('dale');
-        Work::factory(10)->create();
+        User::factory(20)->create();
+        Period::factory(20)->create();
+        Subject::factory(20)->create();
+        Exam::factory(20)->create();
+        Annotation::factory(20)->create();
+        Type::factory(20)->create();
+        Task::factory(20)->create();
+        Work::factory(20)->create();
     }
 }
