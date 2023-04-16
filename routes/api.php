@@ -30,7 +30,7 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('anotacoes', AnnotationController::class);
-    Route::resource('exames', ExamController::class);
+    Route::resource('provas', ExamController::class);
     Route::resource('periodos', PeriodController::class);
     Route::resource('materias', SubjectController::class);
     Route::resource('tarefas', TaskController::class);

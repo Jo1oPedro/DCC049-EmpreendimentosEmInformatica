@@ -13,4 +13,9 @@ class Type extends Model
         'titulo',
         'user_id'
     ];
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
 }

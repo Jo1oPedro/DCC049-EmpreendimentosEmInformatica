@@ -17,4 +17,19 @@ class Task extends Model
         'type_id',
         'user_id'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(Type::class);
+    }
+
+    public function scopeWithTypeSubject($query)
+    {
+        return $query->with('type')->with('subject');
+    }
 }

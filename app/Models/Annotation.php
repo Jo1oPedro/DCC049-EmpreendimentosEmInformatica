@@ -13,4 +13,9 @@ class Annotation extends Model
         'anotacao',
         'subject_id'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }

@@ -12,7 +12,7 @@ class ExamController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['exams' => Exam::withSubjectPeriods()->get()], 200);
     }
 
     /**
@@ -20,30 +20,42 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $exam = Exam::create($request->all());
+        return response()->json(['exam' => $exam], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Exam $exam)
+    public function show(int $exam)
     {
-        //
+        if($exam = Exam::whereId($exam)->first()) {
+            return response()->json(['exam' => Exam::withSubjectPeriods()->get()], 200);
+        }
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Exam $exam)
+    public function update(Request $request, int $exam)
     {
-        //
+        if($exam = Exam::whereId($exam)->first()) {
+            $exam->update($request->all());
+            return response()->json(['exam' => $exam->withSubjectPeriods()->get()], 200);
+        }
+
+        return response()->json(['error' => 'Prova não encontrada'], 404);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Exam $exam)
+    public function destroy(int $exam)
     {
-        //
+        if(Exam::destroy($exam)) {
+            return response()->json('', 204);
+        }
+
+        return response()->json(['error' => 'Prova não encontrada'], 404);
     }
 }
