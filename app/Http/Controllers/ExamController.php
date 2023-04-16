@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Exam;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ExamController extends Controller
 {
@@ -20,7 +21,10 @@ class ExamController extends Controller
      */
     public function store(Request $request)
     {
-        $exam = Exam::create($request->all());
+        $examPath = $request->file('prova')
+            ->store('users_exams', 'public');
+        $examData = array_merge($request->except('prova'), ['prova' => $examPath]);
+        $exam = Exam::create($examData);
         return response()->json(['exam' => $exam], 200);
     }
 
@@ -40,8 +44,16 @@ class ExamController extends Controller
     public function update(Request $request, int $exam)
     {
         if($exam = Exam::whereId($exam)->first()) {
-            $exam->update($request->all());
-            return response()->json(['exam' => $exam->withSubjectPeriods()->get()], 200);
+            $examData = $request->all();
+
+            if($request->file('prova')) {
+                Storage::disk('public')->delete($exam->prova);
+                $examPath = $request->file('prova')->store('users_exams', 'public');
+                $examData = array_merge($request->except('prova'), ['prova' => $examPath]);
+            }
+
+            $exam->update($examData);
+            return response()->json(['exam' => $exam->load('subject.periods')], 200);
         }
 
         return response()->json(['error' => 'Prova não encontrada'], 404);
