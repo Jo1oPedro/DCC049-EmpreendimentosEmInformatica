@@ -18,7 +18,7 @@ class LoginController extends Controller
             return response()->json(
                 [
                     'token' => $token->plainTextToken,
-                    'id' => $user->id
+                    'user' => $user
                 ],
                 200
             );
@@ -42,7 +42,7 @@ class LoginController extends Controller
         Auth::login($user);
 
         return response()->json([
-            'id' => $user->id,
+            'user' => $user,
             'token' => $token->plainTextToken
         ]);
     }
