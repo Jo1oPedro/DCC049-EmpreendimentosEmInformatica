@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserRegistered;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
@@ -40,6 +42,9 @@ class LoginController extends Controller
         $user = User::create($request->all());
         $token = $user->createToken('token');
         Auth::login($user);
+
+        $email = new UserRegistered($user->email);
+        Mail::to($user->email)->send($email);
 
         return response()->json([
             'user' => $user,

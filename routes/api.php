@@ -29,6 +29,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('login', [LoginController::class, 'login']);
 Route::post('register', [LoginController::class, 'register']);
+Route::get('email', function () {
+    return new \App\Mail\UserRegistered('jppppedreira@gmail.com');
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('anotacoes', AnnotationController::class);
