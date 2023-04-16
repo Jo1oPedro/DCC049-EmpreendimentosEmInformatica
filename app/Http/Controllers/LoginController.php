@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserRegistered as UserRegisteredEvent;
 use App\Mail\UserRegistered;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -43,12 +44,17 @@ class LoginController extends Controller
         $token = $user->createToken('token');
         Auth::login($user);
 
-        $email = new UserRegistered($user->email);
-        Mail::to($user->email)->send($email);
+        $this->notifyUserAboutSucessfullRegister($user);
 
         return response()->json([
             'user' => $user,
             'token' => $token->plainTextToken
         ]);
+    }
+
+    private function notifyUserAboutSucessfullRegister(User $user)
+    {
+        $userRegisteredEvent = new UserRegisteredEvent($user);
+        event($userRegisteredEvent);
     }
 }
