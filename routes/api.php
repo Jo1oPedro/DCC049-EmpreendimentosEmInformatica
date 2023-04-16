@@ -8,6 +8,7 @@ use App\Http\Controllers\SubjectController as SubjectController;
 use App\Http\Controllers\TaskController as TaskController;
 use App\Http\Controllers\TypeController as TypeController;
 use App\Http\Controllers\UserController as UserController;
+use App\Http\Controllers\WorkController as WorkController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [LoginController::class, 'login']);
+Route::post('register', [LoginController::class, 'register']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('anotacoes', AnnotationController::class);
@@ -34,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('periodos', PeriodController::class);
     Route::resource('materias', SubjectController::class);
     Route::resource('tarefas', TaskController::class);
+    Route::resource('trabalhos', WorkController::class);
     Route::resource('tipos', TypeController::class);
     Route::resource('usuarios', UserController::class);
     Route::post('logout', [LoginController::class, 'logout']);

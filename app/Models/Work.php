@@ -15,4 +15,9 @@ class Work extends Model
         'trabalho',
         'subject_id'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }

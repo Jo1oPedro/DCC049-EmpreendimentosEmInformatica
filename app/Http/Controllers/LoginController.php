@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -17,7 +18,6 @@ class LoginController extends Controller
             return response()->json(
                 [
                     'token' => $token->plainTextToken,
-                    'user_type' => $user->user_type,
                     'id' => $user->id
                 ],
                 200
@@ -33,5 +33,17 @@ class LoginController extends Controller
     {
         Auth::user()->tokens()->delete();
         return response()->json('', 204);
+    }
+
+    public function register(Request $request)
+    {
+        $user = User::create($request->all());
+        $token = $user->createToken('token');
+        Auth::login($user);
+
+        return response()->json([
+            'id' => $user->id,
+            'token' => $token->plainTextToken
+        ]);
     }
 }
