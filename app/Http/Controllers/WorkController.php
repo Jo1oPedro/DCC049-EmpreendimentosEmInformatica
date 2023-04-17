@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Work;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WorkController extends Controller
 {
@@ -20,7 +21,13 @@ class WorkController extends Controller
      */
     public function store(Request $request)
     {
-        $work = Work::create($request->all());
+        $workData = $request->all();
+        if($request->file('trabalho')) {
+            $work_path = $request->file('trabalho')
+                ->store('users_works', 'public');
+            $workData = array_merge($request->except('trabalho'), ['trabalho' => $work_path]);
+        }
+        $work = Work::create($workData);
         return response()->json(['work' => $work->load('subject')], 200);
     }
 
@@ -42,7 +49,19 @@ class WorkController extends Controller
     public function update(Request $request, int $work)
     {
         if($work = Work::whereId($work)->first()) {
-            $work->update($request->all());
+            $workData = $request->all();
+
+            if($request->file('trabalho')) {
+                if($work->trabalho) {
+                    Storage::disk('public')->delete($work->trabalho);
+                }
+
+                $workPath = $request->file('trabalho')
+                    ->store('users_works', 'public');
+                $workData = array_merge($request->except('trabalho'), ['trabalho' => $workPath]);
+            }
+
+            $work->update($workData);
             return response()->json(['work' => $work->load('subject')], 200);
         }
 
@@ -54,7 +73,11 @@ class WorkController extends Controller
      */
     public function destroy(int $work)
     {
-        if(Work::destroy($work)) {
+        if($work = Work::whereId($work)->first()) {
+            if($work->trabalho) {
+                Storage::disk('public')->delete($work->trabalho);
+            }
+            $work->delete();
             return response()->json('', 204);
         }
 

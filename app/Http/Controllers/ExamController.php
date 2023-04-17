@@ -48,7 +48,8 @@ class ExamController extends Controller
 
             if($request->file('prova')) {
                 Storage::disk('public')->delete($exam->prova);
-                $examPath = $request->file('prova')->store('users_exams', 'public');
+                $examPath = $request->file('prova')
+                    ->store('users_exams', 'public');
                 $examData = array_merge($request->except('prova'), ['prova' => $examPath]);
             }
 
@@ -64,7 +65,11 @@ class ExamController extends Controller
      */
     public function destroy(int $exam)
     {
-        if(Exam::destroy($exam)) {
+        if($exam = Exam::whereId($exam)->first()) {
+            if($exam->prova) {
+                Storage::disk('public')->delete($exam->prova);
+            }
+            $exam->delete();
             return response()->json('', 204);
         }
 
