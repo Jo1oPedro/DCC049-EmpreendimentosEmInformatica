@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Annotation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AnnotationController extends Controller
 {
@@ -20,7 +21,13 @@ class AnnotationController extends Controller
      */
     public function store(Request $request)
     {
-        $annotation = Annotation::create($request->all());
+        $annotationData = $request->all();
+        if($request->file('anotacao')) {
+            $annotationPath = $request->file('anotacao')
+                ->store('users_annotations', 'public');
+            $annotationData = array_merge($request->except('anotacao'), ['anotacao' => $annotationPath]);
+        }
+        $annotation = Annotation::create($annotationData);
         return response()->json(['annotation' => $annotation->load('subject')]);
     }
 
@@ -41,8 +48,19 @@ class AnnotationController extends Controller
      */
     public function update(Request $request, int $annotation)
     {
+        $annotationData = $request->all();
         if($annotation = Annotation::whereId($annotation)->first()) {
-            $annotation->update($request->all());
+            if($request->file('anotacao')) {
+                if($annotation->anotacao) {
+                    Storage::disk('public')->delete($annotation->anotacao);
+                }
+
+                $annotationPath = $request->file('anotacao')
+                    ->store('users_annotations', 'public');
+
+                $annotationData = array_merge($request->except('anotacao'), ['anotacao' => $annotationPath]);
+            }
+            $annotation->update($annotationData);
             return response()->json(['annotation' => $annotation->load('subject')], 200);
         }
 
@@ -54,7 +72,11 @@ class AnnotationController extends Controller
      */
     public function destroy(int $annotation)
     {
-        if(Annotation::destroy($annotation)) {
+        if($annotation = Annotation::whereId($annotation)->first()) {
+            if($annotation->anotacao) {
+                Storage::disk('public')->delete($annotation->anotacao);
+            }
+            $annotation->delete();
             return response()->json('', 204);
         }
 

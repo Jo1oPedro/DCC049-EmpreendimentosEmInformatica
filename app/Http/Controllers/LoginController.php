@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Events\UserRegistered as UserRegisteredEvent;
+use App\Http\Requests\LoginFormRequest;
+use App\Http\Requests\RegisterFormRequest;
 use App\Mail\UserRegistered;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -11,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 
 class LoginController extends Controller
 {
-    public function login(Request $request)
+    public function login(LoginFormRequest $request)
     {
         if(Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
@@ -38,7 +40,7 @@ class LoginController extends Controller
         return response()->json('', 204);
     }
 
-    public function register(Request $request)
+    public function register(RegisterFormRequest $request)
     {
         $user = User::create($request->all());
         $token = $user->createToken('token');
